@@ -1,9 +1,9 @@
-## 0.0.8 (2020-10-27)
+# 1.0.0 (2020-12-11)
 
 
 ### Features
 
-* init project ([8c1a7a6](https://github.com/react-visual-design/react-visual-design-components/commit/8c1a7a6104a8216c8a6a21d283decb26f2ddba67))
+* init project ([445d345](https://github.com/kokiy/react-mobile-calendar/commit/445d34590137e6c6df78e9aa4b25224b3289285f))
 
 
 
