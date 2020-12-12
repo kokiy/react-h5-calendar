@@ -20,7 +20,7 @@ class MonthView extends PureComponent {
     touch: { x: 0, y: 0 },
     translateIndex: 0,
     calendarY: 0, // 于Y轴的位置
-    showType: 'month',
+    showType: '',
   }
 
   isTouching = false
@@ -28,13 +28,14 @@ class MonthView extends PureComponent {
   calendarRef = createRef(null)
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.currentDate !== prevState.currentDate) {
-      const { currentDate } = nextProps
+    const { currentDate } = nextProps
+    if (currentDate !== prevState.currentDate) {
       const dayjsDate = dayjs(currentDate)
       return {
         ...formatMonthData(dayjsDate),
         ...formatWeekData(dayjsDate),
         currentDate,
+        showType: prevState.showType || nextProps.showType,
       }
     }
     return null
@@ -53,6 +54,7 @@ class MonthView extends PureComponent {
       // 上下滑动
       this.setState({ touch: { x: 0, y: moveY / calendarHeight } })
     }
+    this.props.onTouchMove(e)
   }, 25)
 
   handleTouchStart = e => {
@@ -60,6 +62,7 @@ class MonthView extends PureComponent {
     this.touchStartPositionX = e.touches[0].clientX
     this.touchStartPositionY = e.touches[0].clientY
     this.isTouching = true
+    this.props.onTouchStart(e)
   }
 
   handleTouchEnd = e => {
@@ -77,17 +80,23 @@ class MonthView extends PureComponent {
       if (isMonthView) {
         // 月视图
         const nextMonthFirstDay = currentMonthFirstDay[touch.x > 0 ? 'subtract' : 'add'](1, 'month')
-        this.setState({
-          translateIndex: newTranslateIndex,
-          ...formatMonthData(nextMonthFirstDay),
-        })
+        this.setState(
+          {
+            translateIndex: newTranslateIndex,
+            ...formatMonthData(nextMonthFirstDay),
+          },
+          this.props.onTouchEnd,
+        )
       } else {
         // 周视图
         const nextWeekFirstDay = currenWeekFirstDay[touch.x > 0 ? 'subtract' : 'add'](1, 'week')
-        this.setState({
-          translateIndex: newTranslateIndex,
-          ...formatWeekData(nextWeekFirstDay),
-        })
+        this.setState(
+          {
+            translateIndex: newTranslateIndex,
+            ...formatWeekData(nextWeekFirstDay),
+          },
+          this.props.onTouchEnd,
+        )
       }
     } else if (absTouchY > absTouchX && Math.abs(touch.y * calendarHeight) > 50) {
       if (touch.y > 0 && showType === 'week') {
@@ -117,6 +126,10 @@ class MonthView extends PureComponent {
     }
   }
 
+  handleDayClick = date => {
+    this.props.onDateClick(date)
+  }
+
   render() {
     const {
       monthDates,
@@ -128,7 +141,7 @@ class MonthView extends PureComponent {
       currenWeekFirstDay,
       showType,
     } = this.state
-    const { currentDate, transitionDuration } = this.props
+    const { currentDate, transitionDuration, markDates, markType } = this.props
     const isMonthView = showType === 'month'
     return (
       <div className="react-mobile-picker">
@@ -175,9 +188,33 @@ class MonthView extends PureComponent {
                 >
                   {item.map((date, itemIndex) => {
                     const isCurrentDay = date.isSame(currentDate, 'day')
+                    const isOtherMonthDay = !date.isSame(currentMonthFirstDay, 'month')
+                    const isMarkDate = markDates.find(i => date.isSame(i.date, 'day'))
+                    const resetMarkType = (isMarkDate && isMarkDate.markType) || markType
+                    const showDotMark = isMarkDate && resetMarkType === 'dot'
+                    const showCircleMark = isMarkDate && resetMarkType === 'circle'
                     return (
-                      <div key={itemIndex} className="day-cell">
-                        <div className={isCurrentDay ? 'current-day' : ''}>{date.format('DD')}</div>
+                      <div
+                        key={itemIndex}
+                        className={`day-cell ${isOtherMonthDay ? 'is-other-month-day' : ''}`}
+                        onClick={this.handleDayClick.bind(this, date)}
+                      >
+                        <div
+                          className={`day-text ${isCurrentDay ? 'current-day' : ''} ${
+                            showCircleMark ? 'circle-mark' : ''
+                          }`}
+                          style={
+                            showCircleMark ? { borderColor: isMarkDate.color || '#f00' } : null
+                          }
+                        >
+                          {date.format('DD')}
+                        </div>
+                        {showDotMark && (
+                          <div
+                            className={isMarkDate ? 'dot-mark' : ''}
+                            style={{ background: isMarkDate.color || '#f00' }}
+                          />
+                        )}
                       </div>
                     )
                   })}
@@ -193,12 +230,26 @@ class MonthView extends PureComponent {
 
 MonthView.propTypes = {
   currentDate: PropTypes.string,
+  showType: PropTypes.oneOf(['week', 'month']),
   transitionDuration: PropTypes.number,
+  onDateClick: PropTypes.func,
+  onTouchStart: PropTypes.func,
+  onTouchMove: PropTypes.func,
+  onTouchEnd: PropTypes.func,
+  markType: PropTypes.oneOf(['dot', 'circle']),
+  markDates: PropTypes.array,
 }
 
 MonthView.defaultProps = {
   currentDate: dayjs().format('YYYY-MM-DD'),
+  showType: 'month',
   transitionDuration: 0.3,
+  onDateClick: () => {},
+  onTouchStart: () => {},
+  onTouchMove: () => {},
+  onTouchEnd: () => {},
+  markType: 'dot',
+  markDates: [],
 }
 
 export default MonthView

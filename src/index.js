@@ -1,1 +1,1 @@
-export { default as MonthView } from './monthView'
+export { default as MobileCalendar } from './monthView'

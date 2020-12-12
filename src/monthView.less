@@ -1,6 +1,7 @@
 .react-mobile-picker {
   * {
     box-sizing: border-box;
+    user-select: none;
   }
 
   box-sizing: border-box;
@@ -38,6 +39,7 @@
   .calendar-body {
     position: relative;
     height: 240px;
+    transition: height 0.3s;
     &.week-mode {
       height: 40px;
     }
@@ -48,22 +50,37 @@
       align-items: center;
       justify-content: center;
       width: 100%;
-      background-color: #f5f7fa;
       will-change: transform;
       .day-cell {
         display: flex;
         flex-basis: 14.28571%;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         height: 40px;
-        .current-day {
+        &.is-other-month-day {
+          background-color: #f5f7fa;
+        }
+        .day-text {
           display: flex;
           align-items: center;
           justify-content: center;
           width: 30px;
           height: 30px;
+        }
+        .current-day {
           color: #fff;
           background: #1c71fb;
+          border-radius: 50%;
+        }
+        .circle-mark {
+          border: 1px solid red;
+          border-radius: 50%;
+        }
+        .dot-mark {
+          width: 5px;
+          height: 5px;
+          background: red;
           border-radius: 50%;
         }
       }
