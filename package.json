@@ -1,7 +1,7 @@
 {
-  "name": "react-mobile-calendar",
+  "name": "react-h5-calendar",
   "version": "1.0.0",
-  "description": "react-mobile-calendar React component",
+  "description": "react-h5-calendar React component",
   "main": "lib/index.js",
   "module": "es/index.js",
   "files": [
@@ -51,12 +51,12 @@
     "lint-staged": "^10.4.2",
     "prettier": "^2.1.2"
   },
-  "author": "",
-  "homepage": "",
+  "author": "kokiy",
+  "homepage": "https://github.com/kokiy/react-h5-calendar",
   "license": "MIT",
-  "repository": "",
+  "repository": "https://github.com/kokiy/react-h5-calendar",
   "keywords": [
-    "react-component"
+    "react-component","react-h5-calendar","react-mobile-calendar"
   ],
   "dependencies": {
     "dayjs": "1.9.x",

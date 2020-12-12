@@ -3,7 +3,7 @@
 
 ### Features
 
-* init project ([445d345](https://github.com/kokiy/react-mobile-calendar/commit/445d34590137e6c6df78e9aa4b25224b3289285f))
+* init project ([445d345](https://github.com/kokiy/react-h5-calendar/commit/445d34590137e6c6df78e9aa4b25224b3289285f))
 
 
 
