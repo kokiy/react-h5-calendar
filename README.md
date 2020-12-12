@@ -17,8 +17,6 @@
 6. 基于dayjs处理日历逻辑
 
 
-[![npm package][https://img.shields.io/npm/v/npm-package.png?style=flat-square]][https://www.npmjs.com/package/react-h5-calendar]
-
 ### 使用教程
  `yarn add react-h5-calendar`
 
