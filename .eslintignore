@@ -1,0 +1,11 @@
+dist/**/*
+demo/**/*
+es/**/*
+lib/**/*
+tests/**/*
+node_modules
+!.prettierrc.js
+!.stylelintrc.js
+!commitlint.config.js
+**/*.md
+**/*.json
