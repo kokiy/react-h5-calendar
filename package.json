@@ -1,6 +1,6 @@
 {
-  "name": "new-react-calendar",
-  "version": "1.0.6",
+  "name": "light-react-calendar",
+  "version": "1.0.4",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
@@ -10,7 +10,8 @@
     "release": "npm run build && npm publish",
     "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",
     "test": "umi-test",
-    "test:coverage": "umi-test --coverage"
+    "test:coverage": "umi-test --coverage",
+    "publish-lib": "npm run build && npm publish"
   },
   "main": "lib/index.js",
   "module": "es/index.js",

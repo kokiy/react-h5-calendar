@@ -4,8 +4,8 @@ import dayjs from 'dayjs'
 import { throttle, formatMonthData, formatWeekData } from './util'
 import './calendar.less'
 
-import leftArrow from '../public/left-arrow.svg'
-import rightArrow from '../public/right-arrow.svg'
+import leftArrow from '../public/arrow.svg'
+import rightArrow from '../public/arrow.svg'
 
 const head = ['日', '一', '二', '三', '四', '五', '六']
 
@@ -76,28 +76,29 @@ class MonthView extends PureComponent {
     if (absTouchX > absTouchY && absTouchX > 0.15) {
       const isMonthView = showType === 'month'
       const newTranslateIndex = touch.x > 0 ? translateIndex + 1 : translateIndex - 1
+
       if (isMonthView) {
         // 月视图
         const nextMonthFirstDay = currentMonthFirstDay[touch.x > 0 ? 'subtract' : 'add'](1, 'month')
-        const nextMonthLastDay = nextMonthFirstDay.add(42, 'day')
+        const nextMonthStartDay = nextMonthFirstDay.startOf('week')
+        const nextMonthEndDay = nextMonthStartDay.add(42, 'day')
         this.setState(
           {
             translateIndex: newTranslateIndex,
             ...formatMonthData(nextMonthFirstDay),
           },
-          this.props.onTouchEnd(nextMonthFirstDay.valueOf(), nextMonthLastDay.valueOf()),
+          this.props.onTouchEnd(nextMonthStartDay.valueOf(), nextMonthEndDay.valueOf()),
         )
       } else {
         // 周视图
         const nextWeekFirstDay = currenWeekFirstDay[touch.x > 0 ? 'subtract' : 'add'](1, 'week')
         const nextWeekLastDay = nextWeekFirstDay.add(7, 'day')
-
         this.setState(
           {
             translateIndex: newTranslateIndex,
             ...formatWeekData(nextWeekFirstDay),
           },
-          this.props.onTouchEnd(nextWeekFirstDay.valueOf()),
+          this.props.onTouchEnd(nextWeekFirstDay.valueOf(), nextWeekLastDay.valueOf()),
         )
       }
     } else if (absTouchY > absTouchX && Math.abs(touch.y * calendarHeight) > 50) {
@@ -113,19 +114,19 @@ class MonthView extends PureComponent {
   handleMonthToggle = type => {
     const { currentMonthFirstDay, currenWeekFirstDay, showType } = this.state
     const isMonthView = showType === 'month'
-    if (type === 'prev') {
-      this.setState(
-        isMonthView
-          ? formatMonthData(currentMonthFirstDay.subtract(1, 'month'))
-          : formatWeekData(currenWeekFirstDay.subtract(1, 'week')),
+    const isPrev = type === 'prev'
+    const formatFun = isMonthView ? formatMonthData : formatWeekData
+    const operateDate = isMonthView ? currentMonthFirstDay : currenWeekFirstDay
+    const updateStateData = formatFun(
+      operateDate[isPrev ? 'subtract' : 'add'](1, isMonthView ? 'month' : 'week'),
+    )
+    this.setState(updateStateData, () => {
+      const dataArray = updateStateData[isMonthView ? 'monthDates' : 'weekDates'][1]
+      this.props.onTouchEnd(
+        dataArray[0].valueOf(),
+        dataArray[dataArray.length - 1].add(1, 'day').valueOf(),
       )
-    } else if (type === 'next') {
-      this.setState(
-        isMonthView
-          ? formatMonthData(currentMonthFirstDay.add(1, 'month'))
-          : formatWeekData(currenWeekFirstDay.add(1, 'week')),
-      )
-    }
+    })
   }
 
   handleDayClick = date => {
@@ -146,13 +147,13 @@ class MonthView extends PureComponent {
     const { currentDate, transitionDuration, markDates, markType } = this.props
     const isMonthView = showType === 'month'
     return (
-      <div className="react-mobile-picker">
+      <div className="light-react-calendar">
         <div className="calendar-operate">
-          <div className="icon" onClick={this.handleMonthToggle.bind(this, 'prev')}>
+          <div className="icon left-icon" onClick={this.handleMonthToggle.bind(this, 'prev')}>
             <img src={leftArrow} />
           </div>
           <div>{(isMonthView ? currentMonthFirstDay : currenWeekFirstDay).format('YYYY-MM')}</div>
-          <div className="icon" onClick={this.handleMonthToggle.bind(this, 'next')}>
+          <div className="icon right-icon" onClick={this.handleMonthToggle.bind(this, 'next')}>
             <img src={rightArrow} />
           </div>
         </div>
@@ -192,11 +193,14 @@ class MonthView extends PureComponent {
                 >
                   {item.map((date, itemIndex) => {
                     const isCurrentDay = date.isSame(currentDate, 'day')
-                    const isOtherMonthDay = !date.isSame(currentMonthFirstDay, 'month')
+                    const isOtherMonthDay =
+                      showType === 'week' ? false : !date.isSame(currentMonthFirstDay, 'month')
                     const isMarkDate = markDates.find(i => date.isSame(i.date, 'day'))
                     const resetMarkType = (isMarkDate && isMarkDate.markType) || markType
-                    const showDotMark = isMarkDate && resetMarkType === 'dot'
-                    const showCircleMark = isMarkDate && resetMarkType === 'circle'
+                    const showDotMark = isCurrentDay ? false : isMarkDate && resetMarkType === 'dot'
+                    const showCircleMark = isCurrentDay
+                      ? false
+                      : isMarkDate && resetMarkType === 'circle'
                     return (
                       <div
                         key={itemIndex}
@@ -208,7 +212,7 @@ class MonthView extends PureComponent {
                             showCircleMark ? 'circle-mark' : ''
                           }`}
                           style={
-                            showCircleMark ? { borderColor: isMarkDate.color || '#f00' } : null
+                            showCircleMark ? { borderColor: isMarkDate.color || '#4378be' } : null
                           }
                         >
                           {date.format('DD')}
@@ -216,7 +220,7 @@ class MonthView extends PureComponent {
                         {showDotMark && (
                           <div
                             className={isMarkDate ? 'dot-mark' : ''}
-                            style={{ background: isMarkDate.color || '#f00' }}
+                            style={{ background: isMarkDate.color || '#4378be' }}
                           />
                         )}
                       </div>
