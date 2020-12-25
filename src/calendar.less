@@ -3,27 +3,23 @@
     box-sizing: border-box;
     user-select: none;
   }
-
   background-color: #fff;
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;
-  padding-bottom: 10px;
-
   .calendar-operate {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 40px;
+    height: 30px;
     .icon {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 14.28571%;
-      height: 14.28571%;
+      height: 30px;
       img {
-        width: 20px;
-        height: 20px;
+        width: auto;
+        height: 16px;
       }
       &.left-icon {
         transform: rotate(180deg);
@@ -65,7 +61,7 @@
         justify-content: center;
         height: 36px;
         &.is-other-month-day {
-          background-color: #f5f7fa;
+          color: #999;
         }
         .day-text {
           display: flex;
