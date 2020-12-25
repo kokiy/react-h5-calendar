@@ -10,21 +10,22 @@ import rightArrow from '../public/arrow.svg'
 const head = ['日', '一', '二', '三', '四', '五', '六']
 
 class MonthView extends PureComponent {
-  state = {
-    currentMonthFirstDay: null,
-    monthDates: [], // 月日历需要展示的日期 包括前一月 当月 下一月
-    currenWeekFirstDay: null,
-    weekDates: [], // 周日李需要展示的日期  包括前一周 当周 下一周
-    currentDate: '',
-    touch: { x: 0, y: 0 },
-    translateIndex: 0,
-    calendarY: 0, // 于Y轴的位置
-    showType: '',
+  constructor(props) {
+    super(props)
+    this.state = {
+      currentMonthFirstDay: null,
+      monthDates: [], // 月日历需要展示的日期 包括前一月 当月 下一月
+      currenWeekFirstDay: null,
+      weekDates: [], // 周日李需要展示的日期  包括前一周 当周 下一周
+      currentDate: '',
+      touch: { x: 0, y: 0 },
+      translateIndex: 0,
+      calendarY: 0, // 于Y轴的位置
+      showType: props.showType,
+    }
+    this.isTouching = false
+    this.calendarRef = createRef(null)
   }
-
-  isTouching = false
-
-  calendarRef = createRef(null)
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { currentDate } = nextProps
@@ -34,7 +35,6 @@ class MonthView extends PureComponent {
         ...formatMonthData(dayjsDate),
         ...formatWeekData(dayjsDate),
         currentDate,
-        showType: prevState.showType || nextProps.showType,
       }
     }
     return null
@@ -103,9 +103,23 @@ class MonthView extends PureComponent {
       }
     } else if (absTouchY > absTouchX && Math.abs(touch.y * calendarHeight) > 50) {
       if (touch.y > 0 && showType === 'week') {
-        this.setState({ showType: 'month' })
+        this.setState({ showType: 'month' }, () => {
+          const dataArray = this.state.monthDates[1]
+          this.props.onToggleShowType({
+            showType: this.state.showType,
+            startTime: dataArray[0].valueOf(),
+            endTime: dataArray[dataArray.length - 1].add(1, 'day').valueOf(),
+          })
+        })
       } else if (touch.y < 0 && showType === 'month') {
-        this.setState({ showType: 'week' })
+        this.setState({ showType: 'week' }, () => {
+          const dataArray = this.state.weekDates[1]
+          this.props.onToggleShowType({
+            showType: this.state.showType,
+            startTime: dataArray[0].valueOf(),
+            endTime: dataArray[dataArray.length - 1].add(1, 'day').valueOf(),
+          })
+        })
       }
     }
     this.setState({ touch: { x: 0, y: 0 } })
@@ -244,6 +258,7 @@ MonthView.propTypes = {
   onTouchStart: PropTypes.func,
   onTouchMove: PropTypes.func,
   onTouchEnd: PropTypes.func,
+  onToggleShowType: PropTypes.func,
   markType: PropTypes.oneOf(['dot', 'circle']),
   markDates: PropTypes.array,
 }
@@ -256,6 +271,7 @@ MonthView.defaultProps = {
   onTouchStart: () => {},
   onTouchMove: () => {},
   onTouchEnd: () => {},
+  onToggleShowType: () => {},
   markType: 'dot',
   markDates: [],
 }
