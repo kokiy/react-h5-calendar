@@ -4,8 +4,8 @@ import dayjs from 'dayjs'
 import { throttle, formatMonthData, formatWeekData } from './util'
 import './calendar.less'
 
-import leftArrow from '../public/arrow.svg'
-import rightArrow from '../public/arrow.svg'
+import arrow from '../public/arrow.svg'
+import doubleArrow from '../public/double-arrow.svg'
 
 const head = ['日', '一', '二', '三', '四', '五', '六']
 
@@ -147,6 +147,8 @@ class MonthView extends PureComponent {
     this.props.onDateClick(date)
   }
 
+  handleBottomOperate() {}
+
   render() {
     const {
       monthDates,
@@ -164,11 +166,11 @@ class MonthView extends PureComponent {
       <div className="light-react-calendar">
         <div className="calendar-operate">
           <div className="icon left-icon" onClick={this.handleMonthToggle.bind(this, 'prev')}>
-            <img src={leftArrow} />
+            <img src={arrow} />
           </div>
           <div>{(isMonthView ? currentMonthFirstDay : currenWeekFirstDay).format('YYYY-MM')}</div>
           <div className="icon right-icon" onClick={this.handleMonthToggle.bind(this, 'next')}>
-            <img src={rightArrow} />
+            <img src={arrow} />
           </div>
         </div>
         <div className="calendar-head">
@@ -244,6 +246,9 @@ class MonthView extends PureComponent {
               )
             })}
           </div>
+        </div>
+        <div className="bottom-operate">
+          <img className={isMonthView ? 'top' : 'down'} src={doubleArrow} />
         </div>
       </div>
     )
