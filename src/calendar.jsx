@@ -163,7 +163,7 @@ class MonthView extends PureComponent {
     const { currentDate, transitionDuration, markDates, markType } = this.props
     const isMonthView = showType === 'month'
     return (
-      <div className="light-react-calendar">
+      <div className="react-h5-calendar">
         <div className="calendar-operate">
           <div className="icon left-icon" onClick={this.handleMonthToggle.bind(this, 'prev')}>
             <img src={arrow} />
@@ -199,11 +199,9 @@ class MonthView extends PureComponent {
                   className="month-cell"
                   key={`month-cell-${index}`}
                   style={{
-                    transform: `translate3d(${(index -
-                      1 +
-                      translateIndex +
-                      (this.isTouching ? touch.x : 0)) *
-                      100}%, ${calendarY}px, 0)`,
+                    transform: `translate3d(${
+                      (index - 1 + translateIndex + (this.isTouching ? touch.x : 0)) * 100
+                    }%, ${calendarY}px, 0)`,
                     transitionDuration: `${this.isTouching ? 0 : transitionDuration}s`,
                   }}
                 >

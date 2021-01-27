@@ -5,8 +5,7 @@
 ```jsx
 import dayjs from 'dayjs'
 import React, { Component } from 'react'
-import { render } from 'react-dom'
-import { Calendar } from 'light-react-calendar'
+import { Calendar } from 'react-h5-calendar'
 
 export default class Demo extends Component {
   state = {
