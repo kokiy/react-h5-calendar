@@ -31,7 +31,7 @@
 
 `yarn add react-h5-calendar`
 
-```js
+```jsx
 import { MobileCalendar } from 'react-h5-calendar'
 export default class Demo extends Component {
   render() {
