@@ -16,7 +16,7 @@
 
 ![demo](./qrcode.png)
 
-### 直接打开浏览器查看 https://kokiy.github.io/react-h5-calendar/
+### 直接打开浏览器查看 https://kokiy.github.io/react-h5-calendar/calendar
 
 ### react 移动端日历组件
 
@@ -25,7 +25,8 @@
 3. 支持左右滑动切换月份
 4. 支持上下滑动切换日历视图
 5. 支持日历上打点标记
-6. 基于[dayjs](https://github.com/iamkun/dayjs)处理日历逻辑
+6. 本项目基于[dumi](https://github.com/umijs/dumi) 构建和发布
+7. 基于[dayjs](https://github.com/iamkun/dayjs)处理日历逻辑
 
 ### 使用教程
 
