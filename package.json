@@ -1,7 +1,7 @@
 {
   "name": "react-h5-calendar",
   "description": "react-h5-calendar React component",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",

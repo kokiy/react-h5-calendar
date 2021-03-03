@@ -25,6 +25,7 @@ export default class Demo extends Component {
         markType="dot"
         currentDate={this.state.currentDate}
         onTouchEnd={(a, b) => console.log(a, b)}
+        disableWeekView={false}
       />
     )
   }

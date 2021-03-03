@@ -42,6 +42,7 @@ class MonthView extends PureComponent {
 
   handleTouchMove = throttle(e => {
     e.stopPropagation()
+    const { disableWeekView } = this.props
     const moveX = e.touches[0].clientX - this.touchStartPositionX
     const moveY = e.touches[0].clientY - this.touchStartPositionY
     const calendarWidth = this.calendarRef.current.offsetWidth
@@ -49,8 +50,7 @@ class MonthView extends PureComponent {
     if (Math.abs(moveX) > Math.abs(moveY)) {
       // 左右滑动
       this.setState({ touch: { x: moveX / calendarWidth, y: 0 } })
-    } else {
-      // 上下滑动
+    } else if (!disableWeekView) {
       this.setState({ touch: { x: 0, y: moveY / calendarHeight } })
     }
     this.props.onTouchMove(e)
@@ -67,6 +67,7 @@ class MonthView extends PureComponent {
   handleTouchEnd = e => {
     e.stopPropagation()
     const { showType } = this.state
+    const { disableWeekView } = this.props
     const calendarHeight = this.calendarRef.current.offsetHeight
     const { touch, translateIndex, currentMonthFirstDay, currenWeekFirstDay } = this.state
     this.f = false
@@ -102,7 +103,9 @@ class MonthView extends PureComponent {
         )
       }
     } else if (absTouchY > absTouchX && Math.abs(touch.y * calendarHeight) > 50) {
-      if (touch.y > 0 && showType === 'week') {
+      if (disableWeekView) {
+        // 禁用周视图
+      } else if (touch.y > 0 && showType === 'week') {
         this.setState({ showType: 'month' }, () => {
           const dataArray = this.state.monthDates[1]
           this.props.onToggleShowType({
@@ -160,7 +163,7 @@ class MonthView extends PureComponent {
       currenWeekFirstDay,
       showType,
     } = this.state
-    const { currentDate, transitionDuration, markDates, markType } = this.props
+    const { currentDate, transitionDuration, markDates, markType, disableWeekView } = this.props
     const isMonthView = showType === 'month'
     return (
       <div className="react-h5-calendar">
@@ -245,9 +248,11 @@ class MonthView extends PureComponent {
             })}
           </div>
         </div>
-        <div className="bottom-operate">
-          <img className={isMonthView ? 'top' : 'down'} src={doubleArrow} />
-        </div>
+        {disableWeekView ? null : (
+          <div className="bottom-operate">
+            <img className={isMonthView ? 'top' : 'down'} src={doubleArrow} />
+          </div>
+        )}
       </div>
     )
   }
@@ -264,6 +269,7 @@ MonthView.propTypes = {
   onToggleShowType: PropTypes.func,
   markType: PropTypes.oneOf(['dot', 'circle']),
   markDates: PropTypes.array,
+  disableWeekView: PropTypes.bool,
 }
 
 MonthView.defaultProps = {
@@ -277,6 +283,7 @@ MonthView.defaultProps = {
   onToggleShowType: () => {},
   markType: 'dot',
   markDates: [],
+  disableWeekView: false,
 }
 
 export default MonthView

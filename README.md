@@ -59,6 +59,7 @@ export default class Demo extends Component {
 | `onTouchEnd`         | 滑动结束回调                    | `() => {}` |
 | `markType`           | 标记类型 支持`dot`和`circle`    | `dot`      |
 | `markDates`          | 需要标记的日期数组              | `[]`       |
+| `disableWeekView`    | 禁用周视图                      | `false`    |
 
 ### `markDates` 参数说明
 
